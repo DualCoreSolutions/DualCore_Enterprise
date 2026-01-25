@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; background-color: #0a0b10; color: #e6edf3;">
+    <div style="background: #161b22; padding: 40px; border-radius: 10px; border: 1px solid #30363d; width: 100%; max-width: 400px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+        
+        <h2 style="text-align: center; margin-bottom: 20px; font-family: sans-serif;">DualCore <span style="color: #00ff88;">Login</span></h2>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">E-mail ou Usuário</label>
+                {{ form.username }}
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px;">Senha</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 12px; background: #00ff88; border: none; border-radius: 5px; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s;">
+                ENTRAR NO SISTEMA
+            </button>
+        </form>
+
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+            Ainda não tem conta? <a href="{% url 'register' %}" style="color: #00d4ff; text-decoration: none;">Cadastre-se</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    input {
+        width: 100%;
+        padding: 10px;
+        background: #0d1117;
+        border: 1px solid #30363d;
+        color: #fff;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    input:focus {
+        outline: none;
+        border-color: #00ff88;
+        box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);
+    }
+</style>
+{% endblock %}

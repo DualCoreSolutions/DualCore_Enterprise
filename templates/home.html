@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding-top: 100px;">
+    
+    <h1 style="font-size: 3.5rem; margin-bottom: 10px;">
+        Soluções em <span style="color: #00ff88;">Alta Performance</span>
+    </h1>
+    
+    <p style="color: #8b949e; font-size: 1.2rem; max-width: 600px; margin: 0 auto 40px;">
+        Infraestrutura de Redes, Desenvolvimento Python e Automação para escalar o seu negócio.
+    </p>
+
+    <div style="display: flex; gap: 20px; justify-content: center;">
+        {% if user.is_authenticated %}
+            <a href="#" style="padding: 15px 30px; background: #00d4ff; color: #000; font-weight: bold; border-radius: 5px;">
+                Acessar Painel
+            </a>
+        {% else %}
+            <a href="{% url 'register' %}" style="padding: 15px 30px; background: #00ff88; color: #000; font-weight: bold; border-radius: 5px;">
+                Começar Agora
+            </a>
+            <a href="{% url 'login' %}" style="padding: 15px 30px; border: 1px solid #30363d; color: #fff; border-radius: 5px;">
+                Área do Cliente
+            </a>
+        {% endif %}
+    </div>
+
+    <div style="margin-top: 80px; opacity: 0.3; font-family: monospace; color: #00ff88;">
+        > initiating system core... [OK]<br>
+        > connecting to database... [OK]<br>
+        > DualCore status: ONLINE
+    </div>
+
+</div>
+{% endblock %}

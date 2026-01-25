@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DualCore Solutions | Enterprise</title>
+    <style>
+        /* CSS Básico Global - Dark Theme */
+        body { margin: 0; padding: 0; background-color: #0a0b10; color: #e6edf3; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        a { text-decoration: none; color: inherit; }
+        
+        /* Navbar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background-color: #161b22; border-bottom: 1px solid #30363d; }
+        .logo { font-size: 1.5rem; font-weight: bold; letter-spacing: 1px; }
+        .logo span { color: #00ff88; }
+        
+        .nav-links a { margin-left: 20px; font-size: 0.95rem; color: #8b949e; transition: 0.3s; }
+        .nav-links a:hover { color: #00ff88; }
+        .btn-login { border: 1px solid #30363d; padding: 8px 15px; border-radius: 5px; }
+        .btn-login:hover { border-color: #00ff88; color: #00ff88; }
+
+        /* Area de Conteúdo */
+        .content { min-height: 80vh; }
+
+        /* Footer */
+        footer { text-align: center; padding: 20px; color: #484f58; font-size: 0.8rem; border-top: 1px solid #30363d; margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">DualCore<span>_Enterprise</span></div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Início</a>
+            
+            {% if user.is_authenticated %}
+                <span style="color: #00d4ff; margin-left: 20px;">Olá, {{ user.username }}</span>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background:none; border:none; color: #ff5555; cursor: pointer; margin-left: 15px; font-size: 0.95rem;">Sair</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-login">Login</a>
+                <a href="{% url 'register' %}" class="btn-login" style="background: #00ff88; color: #000; border: none;">Criar Conta</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer>
+        &copy; 2026 DualCore Solutions. Todos os sistemas operacionais. 🟢
+    </footer>
+
+</body>
+</html>

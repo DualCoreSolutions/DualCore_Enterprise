@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="padding: 50px 5%; max-width: 1200px; margin: 0 auto; color: #e6edf3;">
+    
+    <div style="border-bottom: 1px solid #30363d; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="font-size: 2rem;">Olá, <span style="color: #00ff88;">{{ user.username }}</span></h1>
+            <p style="color: #8b949e;">Bem-vindo ao seu painel de controle.</p>
+        </div>
+        <div>
+            <span style="background: #1f6feb; color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.8rem;">
+                {% if user.is_client %} CLIENTE VIP {% else %} USUÁRIO {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        
+        <div style="background: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d;">
+            <h3 style="margin-bottom: 15px; color: #00d4ff;"><i class="fa-solid fa-user"></i> Meus Dados</h3>
+            <p><strong>E-mail:</strong> {{ user.email }}</p>
+            <p><strong>Telefone:</strong> {{ user.telefone|default:"Não informado" }}</p>
+            <p><strong>Bio:</strong> {{ user.bio|default:"Sem biografia" }}</p>
+            <br>
+            <button style="background: transparent; border: 1px solid #30363d; color: #e6edf3; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
+                Editar Perfil (Em breve)
+            </button>
+        </div>
+
+        <div style="background: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d;">
+            <h3 style="margin-bottom: 15px; color: #ff7b72;"><i class="fa-solid fa-shield-halved"></i> Área de Risco</h3>
+            <p>Gerencie a segurança da sua conta.</p>
+            <br>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" style="background: #ff7b72; border: none; color: #000; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                    Sair do Sistema
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
