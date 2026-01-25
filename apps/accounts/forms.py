@@ -5,11 +5,11 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        # Campos que aparecem no cadastro
         fields = ('username', 'email', 'telefone')
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        # Campos que aparecem na edição do admin
-        fields = ('username', 'email', 'telefone', 'bio', 'is_client')
+        # Campos que o usuário pode editar no dashboard
+        fields = ('email', 'telefone', 'bio')
+        

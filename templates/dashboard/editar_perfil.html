@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 60px auto; padding: 0 20px;">
+    <div class="card">
+        <h2 style="margin-top: 0;">Editar <span class="text-primary">Perfil</span></h2>
+        <p class="text-muted" style="margin-bottom: 30px;">Mantenha suas informações de contato atualizadas.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600;">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<small class="text-muted">{{ field.help_text }}</small>{% endif %}
+                </div>
+            {% endfor %}
+            
+            <div style="display: flex; gap: 12px; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="flex: 2;">SALVAR MUDANÇAS</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline" style="flex: 1; text-align: center; text-decoration: none; line-height: 24px;">VOLTAR</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Estilo para os inputs do Django renderizados pelo form */
+    input, textarea {
+        width: 100%;
+        padding: 12px;
+        background: #0d1117;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: white;
+        box-sizing: border-box;
+        transition: var(--transition);
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); }
+</style>
+{% endblock %}

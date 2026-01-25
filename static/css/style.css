@@ -1,0 +1,87 @@
+/* static/css/style.css */
+:root {
+    --bg-main: #0d1117;
+    --bg-card: #161b22;
+    --border: #30363d;
+    --primary: #00ff88;
+    --secondary: #00d4ff;
+    --text-white: #e6edf3;
+    --text-gray: #8b949e;
+    --danger: #ff7b72;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-main);
+    color: var(--text-white);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+}
+
+/* Navbar Moderna */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background: rgba(22, 27, 34, 0.95);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo { font-size: 1.4rem; font-weight: 800; }
+.logo span { color: var(--primary); }
+
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { 
+    color: var(--text-gray); 
+    text-decoration: none; 
+    font-size: 0.9rem; 
+    transition: 0.3s;
+}
+.nav-links a:hover { color: var(--primary); }
+
+/* Grid e Cards do Dashboard */
+.dashboard-container { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+/* Botões Customizados */
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.btn-primary { background: var(--primary); color: #000; }
+.btn-outline { border-color: var(--border); color: var(--text-white); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+/* Utilitários */
+.text-primary { color: var(--primary); }
+.text-muted { color: var(--text-gray); }
+
+/* Adicione ao final do static/css/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;850&display=swap');
+
+.content {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Garante que imagens e elementos não quebrem o layout */
+* { box-sizing: border-box; }

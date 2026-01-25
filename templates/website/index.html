@@ -1,19 +1,54 @@
 {% extends 'base.html' %}
 
-{% block title %}| Home{% endblock %}
-
 {% block content %}
-    <h1 style="font-size: 3rem; margin-bottom: 10px;">TRANSFORMAMOS <span style="color: #00ff88;">CÓDIGO</span> EM RESULTADO.</h1>
-    <p style="color: #888; font-size: 1.2rem; max-width: 600px; margin: 0 auto 30px;">
-        Infraestrutura de Redes, Automação Python e Sistemas Web de Alta Performance.
-    </p>
+<div style="padding: 100px 5%; text-align: center; max-width: 1200px; margin: 0 auto;">
+    
+    <div style="margin-bottom: 80px;">
+        <h1 style="font-size: 4rem; margin-bottom: 20px; line-height: 1.1; font-weight: 850;">
+            TRANSFORMAMOS <span class="text-primary">CÓDIGO</span><br> EM RESULTADO.
+        </h1>
+        
+        <p class="text-muted" style="font-size: 1.25rem; max-width: 700px; margin: 0 auto 40px;">
+            Especialistas em Infraestrutura de Redes, Automação com Python e Sistemas Web de Alta Performance para escalar o seu negócio.
+        </p>
 
-    <div>
-        <a href="#" class="btn" style="padding: 15px 30px; font-size: 1.1rem;">Nossos Serviços</a>
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <a href="{% url 'pedir_orcamento' %}" class="btn btn-primary" style="padding: 15px 35px; font-size: 1rem;">
+                COMEÇAR PROJECTO
+            </a>
+            <a href="#servicos" class="btn btn-outline" style="padding: 15px 35px; font-size: 1rem;">
+                NOSSOS SERVIÇOS
+            </a>
+        </div>
     </div>
 
-    <div style="margin-top: 50px; border: 1px solid #333; padding: 20px; display: inline-block; background: #111;">
-        <p>> System Status: <strong>ONLINE</strong></p>
-        <p>> Location: <strong>Rondônia, BR</strong></p>
+    <div id="servicos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; text-align: left;">
+        
+        <div class="card">
+            <div style="color: var(--primary); font-size: 1.5rem; margin-bottom: 15px;">⚡</div>
+            <h3 style="margin: 0 0 10px 0;">Infraestrutura</h3>
+            <p class="text-muted">Configuração de servidores, redes seguras e ambientes escaláveis para a sua empresa.</p>
+        </div>
+
+        <div class="card">
+            <div style="color: var(--secondary); font-size: 1.5rem; margin-bottom: 15px;">🐍</div>
+            <h3 style="margin: 0 0 10px 0;">Automação Python</h3>
+            <p class="text-muted">Elimine tarefas repetitivas com scripts inteligentes e integração de sistemas robustos.</p>
+        </div>
+
+        <div class="card">
+            <div style="color: var(--primary); font-size: 1.5rem; margin-bottom: 15px;">🌐</div>
+            <h3 style="margin: 0 0 10px 0;">Sistemas Web</h3>
+            <p class="text-muted">Desenvolvimento de plataformas empresariais modernas com foco em performance e segurança.</p>
+        </div>
+
     </div>
+
+    <div style="margin-top: 100px; padding: 20px; background: #000; border: 1px solid var(--border); border-radius: 8px; display: inline-block; font-family: 'Courier New', monospace; text-align: left; font-size: 0.85rem;">
+        <div style="color: var(--primary); margin-bottom: 5px;">> DualCore_Enterprise status: ONLINE</div>
+        <div style="color: var(--text-white); opacity: 0.6;">> Local: Rondônia, BR</div>
+        <div style="color: var(--text-white); opacity: 0.6;">> Uptime: 99.9%</div>
+    </div>
+
+</div>
 {% endblock %}

@@ -1,4 +1,4 @@
-# Django
+# jango
 *.log
 *.pot
 *.pyc
@@ -13,4 +13,4 @@ env/
 .env
 
 # VS Code
-.vscode/
+.vscode/D
