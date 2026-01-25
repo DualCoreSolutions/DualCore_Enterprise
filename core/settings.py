@@ -145,3 +145,22 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # Redirecionamento após Login/Logout
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# core/settings.py
+
+# ... (restante do código)
+
+# --- Configuração de Notificações por E-mail ---
+# Para testes em desenvolvimento, os e-mails aparecerão no seu terminal:
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Para produção (Gmail), utilize estas configurações no seu .env:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.getenv('EMAIL_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
+# E-mail que receberá as notificações de novos orçamentos
+DEFAULT_FROM_EMAIL = 'dualcoresolutions.tech@gmail.com'
