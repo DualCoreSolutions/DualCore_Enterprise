@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="padding: 80px 5%; text-align: center; max-width: 800px; margin: 0 auto;">
+    <div class="card" style="border-color: var(--primary); padding: 50px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
+        <h1 style="font-size: 2.5rem; margin-bottom: 15px;">Solicitação <span class="text-primary">Recebida!</span></h1>
+        <p class="text-muted" style="font-size: 1.1rem; margin-bottom: 30px;">
+            Olá <strong>{{ nome }}</strong>, o seu pedido para <strong>{{ servico }}</strong> já está com a nossa equipa técnica. 
+            Enviámos uma confirmação para o seu e-mail.
+        </p>
+
+        <div style="background: rgba(0, 255, 136, 0.05); border: 1px dashed var(--primary); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <p style="margin: 0 0 15px 0; font-weight: 600;">Quer agilizar o atendimento?</p>
+            <a href="https://wa.me/5569992889682?text=Olá!%20Acabei%20de%20solicitar%20um%20orçamento%20no%20site%20para%20{{ servico }}.%20Meu%20nome%20é%20{{ nome }}." 
+               target="_blank" 
+               class="btn btn-primary" 
+               style="background: #25D366; color: white; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" alt="WhatsApp">
+                FALAR COM CONSULTOR AGORA
+            </a>
+        </div>
+
+        <a href="{% url 'home' %}" class="text-muted" style="text-decoration: underline;">Voltar para o início</a>
+    </div>
+</div>
+{% endblock %}
