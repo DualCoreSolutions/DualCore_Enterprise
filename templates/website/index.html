@@ -22,8 +22,7 @@
         </div>
     </div>
 
-    <div id="servicos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; text-align: left;">
-        
+    <div id="servicos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; text-align: left; margin-bottom: 100px;">
         {% for servico in servicos %}
         <div class="card">
             <div style="color: var(--primary); font-size: 1.5rem; margin-bottom: 15px;">
@@ -38,10 +37,32 @@
             Estamos atualizando nosso catálogo de serviços. Volte em breve!
         </p>
         {% endfor %}
-
     </div>
 
-    <div style="margin-top: 100px; padding: 20px; background: #000; border: 1px solid var(--border); border-radius: 8px; display: inline-block; font-family: 'Courier New', monospace; text-align: left; font-size: 0.85rem;">
+    <div id="portfolio" style="text-align: left; margin-bottom: 100px;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Projetos <span class="text-primary">Recentes</span></h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+            {% for projeto in projetos %}
+            <div class="card" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+                <img src="{{ projeto.imagem.url }}" alt="{{ projeto.titulo }}" style="width: 100%; height: 200px; object-fit: cover;">
+                
+                <div style="padding: 25px;">
+                    <span style="font-size: 0.75rem; color: var(--primary); font-weight: bold; text-transform: uppercase;">
+                        {{ projeto.tecnologias }}
+                    </span>
+                    <h3 style="margin: 10px 0;">{{ projeto.titulo }}</h3>
+                    <p class="text-muted" style="font-size: 0.95rem;">{{ projeto.descricao }}</p>
+                    <small class="text-muted">Concluído em: {{ projeto.data_conclusao|date:"M Y" }}</small>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted">A preparar a galeria de projetos concluídos pela DualCore...</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="padding: 20px; background: #000; border: 1px solid var(--border); border-radius: 8px; display: inline-block; font-family: 'Courier New', monospace; text-align: left; font-size: 0.85rem;">
         <div style="color: var(--primary); margin-bottom: 5px;">> DualCore_Enterprise status: ONLINE</div>
         <div style="color: var(--text-white); opacity: 0.6;">> Local: Rondônia, BR</div>
         <div style="color: var(--text-white); opacity: 0.6;">> Uptime: 99.9%</div>

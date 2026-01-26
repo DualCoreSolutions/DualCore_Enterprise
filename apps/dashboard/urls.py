@@ -1,7 +1,8 @@
+# apps/dashboard/urls.py
 from django.urls import path
-from .views import dashboard_home, editar_perfil
+from . import views
 
 urlpatterns = [
-    path('', dashboard_home, name='dashboard'),
-    path('editar/', editar_perfil, name='editar_perfil'),
+    # O nome 'dashboard' aqui resolve o erro de redirecionamento
+    path('', views.DashboardIndexView.as_view(), name='dashboard'),
 ]

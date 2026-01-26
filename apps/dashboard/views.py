@@ -1,30 +1,15 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from apps.accounts.forms import CustomUserChangeForm
-from apps.website.models import Orcamento # Importação necessária
+# apps/dashboard/views.py
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from apps.website.models import Orcamento # Certifique-se desta importação
 
-@login_required # Garante que só usuários logados entrem
-def dashboard_home(request):
-    # Coletamos os 5 orçamentos mais recentes para exibir ao staff
-    orcamentos = None
-    if request.user.is_staff:
-        orcamentos = Orcamento.objects.all().order_by('-data_envio')[:5]
+class DashboardIndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'dashboard/index.html'
     
-    context = {
-        'orcamentos': orcamentos,
-    }
-    return render(request, 'dashboard/home.html', context)
-
-@login_required
-def editar_perfil(request):
-    if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Perfil atualizado com sucesso!")
-            return redirect('dashboard')
-    else:
-        form = CustomUserChangeForm(instance=request.user)
-    
-    return render(request, 'dashboard/editar_perfil.html', {'form': form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Busca todos os orçamentos para listar no dashboard
+        context['orçamentos'] = Orcamento.objects.all().order_by('-data_envio')
+        # Conta quantos estão pendentes para o card de resumo
+        context['pendentes'] = Orcamento.objects.filter(status='pendente').count()
+        return context

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="padding: 100px 5%; display: flex; justify-content: center;">
+    <div class="card" style="max-width: 400px; width: 100%; border: 1px solid var(--border);">
+        <h2 style="margin-bottom: 25px; text-align: center;">Acesso <span class="text-primary">Restrito</span></h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Usuário</label>
+                {{ form.username }}
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px;">Senha</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">ENTRAR</button>
+        </form>
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <small class="text-muted">DualCore Solutions - Gestão de Infraestrutura</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

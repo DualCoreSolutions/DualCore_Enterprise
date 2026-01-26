@@ -1,6 +1,6 @@
-import os # IMPORTANTE
+import os
 from pathlib import Path
-from dotenv import load_dotenv # IMPORTANTE
+from dotenv import load_dotenv
 
 # Carrega as variáveis do arquivo .env
 load_dotenv()
@@ -8,7 +8,6 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- SEGURANÇA ---
-# Agora pegamos a chave e o debug de forma mais segura
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-i_+ak3&%jandkx^5$=rhuc2z%hbcc%3*c%rjqfnfd94klr&q4(')
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -21,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Apps da DualCore Solutions
     'apps.website',
     'apps.accounts',
     'apps.dashboard',
@@ -56,6 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+# --- BANCO DE DADOS ---
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -63,6 +65,7 @@ DATABASES = {
     }
 }
 
+# --- VALIDAÇÃO DE SENHA ---
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -70,23 +73,29 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# --- LOCALIZAÇÃO ---
+# --- LOCALIZAÇÃO E IDIOMA ---
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_TZ = True
 
+# --- ARQUIVOS ESTÁTICOS E MÍDIA ---
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --- AUTENTICAÇÃO E REDIRECIONAMENTO ---
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+# Redireciona para o Dashboard da DualCore após o login
+LOGIN_REDIRECT_URL = 'dashboard' 
+LOGOUT_REDIRECT_URL = 'login'
 
-# --- CONFIGURAÇÃO DE E-MAIL REAL (GMAIL) ---
-# Mudamos de 'console' para 'smtp' para enviar de verdade
+# --- CONFIGURAÇÃO DE E-MAIL REAL (GMAIL SMTP) ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -94,5 +103,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
-# Remetente padrão que o cliente verá
+# Remetente padrão para comunicações da empresa
 DEFAULT_FROM_EMAIL = f"DualCore Solutions <{os.getenv('EMAIL_USER')}>"

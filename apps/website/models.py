@@ -1,3 +1,4 @@
+# apps/website/models.py
 from django.db import models
 
 class Orcamento(models.Model):
@@ -16,23 +17,31 @@ class Orcamento(models.Model):
 
     nome = models.CharField(max_length=100)
     email = models.EmailField()
-    # Adicionando o telefone que validamos anteriormente
     telefone = models.CharField(max_length=20, blank=True, null=True) 
     servico = models.CharField(max_length=20, choices=SERVICOS)
     mensagem = models.TextField()
-    # Novo campo para gestão interna
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
     data_envio = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.nome} - {self.get_servico_display()}"
 
-# Novo modelo para tornar seus serviços editáveis pelo Admin
 class ServicoPrestado(models.Model):
     titulo = models.CharField(max_length=100)
     descricao = models.TextField()
-    icone = models.CharField(max_length=50, help_text="Nome do ícone (ex: bi-code-slash)")
+    icone = models.CharField(max_length=50, help_text="Ex: bi-cpu")
     ativo = models.BooleanField(default=True)
 
-    def __clstr__(self):
+    def __str__(self):
+        return self.titulo
+
+# NOVO MODELO: Projetos do Portfólio
+class Projeto(models.Model):
+    titulo = models.CharField(max_length=150)
+    descricao = models.TextField()
+    imagem = models.ImageField(upload_to='portfolio/')
+    tecnologias = models.CharField(max_length=200, help_text="Ex: Python, Django, Docker")
+    data_conclusao = models.DateField()
+
+    def __str__(self):
         return self.titulo
