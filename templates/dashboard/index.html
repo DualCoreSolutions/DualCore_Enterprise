@@ -7,55 +7,70 @@
         <div class="text-muted">Bem-vindo, {{ user.username }}!</div>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
-        <div class="card" style="border-left: 5px solid var(--primary);">
-            <h4 class="text-muted">Total de Orçamentos</h4>
-            <div style="font-size: 2rem; font-weight: bold;">{{ orçamentos.count|default:"0" }}</div>
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 30px; align-items: stretch;">
+        
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="card" style="border-left: 5px solid var(--primary); padding: 15px;">
+                <h4 class="text-muted" style="font-size: 0.85rem; margin-bottom: 5px;">Total de Orçamentos</h4>
+                <div style="font-size: 2rem; font-weight: bold;">{{ orçamentos.count|default:"0" }}</div>
+            </div>
+            <div class="card" style="border-left: 5px solid #ffc107; padding: 15px;">
+                <h4 class="text-muted" style="font-size: 0.85rem; margin-bottom: 5px;">Aguardando Análise</h4>
+                <div style="font-size: 2rem; font-weight: bold;">{{ pendentes|default:"0" }}</div>
+            </div>
         </div>
-        <div class="card" style="border-left: 5px solid #ffc107;">
-            <h4 class="text-muted">Aguardando Análise</h4>
-            <div style="font-size: 2rem; font-weight: bold;">{{ pendentes|default:"0" }}</div>
+
+        <div class="card" style="padding: 15px; height: 260px; overflow: hidden;">
+            <h4 class="text-muted" style="font-size: 0.85rem; margin-bottom: 10px;">Demanda por Serviço</h4>
+            <div style="position: relative; height: 180px; width: 100%;">
+                <canvas id="graficoServicos"></canvas>
+            </div>
         </div>
     </div>
 
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <div style="padding: 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02);">
-            <h3 style="margin: 0;">Solicitações Recentes</h3>
+    <div class="card" style="padding: 0; overflow: hidden; border: 1px solid var(--border);">
+        <div style="padding: 15px 20px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02);">
+            <h3 style="margin: 0; font-size: 1.1rem;">Solicitações Recentes</h3>
         </div>
         <table style="width: 100%; border-collapse: collapse; text-align: left;">
-            <thead style="background: rgba(0,255,136,0.1);">
+            <thead style="background: rgba(0,255,136,0.05); color: var(--primary);">
                 <tr>
-                    <th style="padding: 15px;">Cliente</th>
-                    <th style="padding: 15px;">Serviço</th>
-                    <th style="padding: 15px;">Data</th>
-                    <th style="padding: 15px;">Status</th>
-                    <th style="padding: 15px; text-align: center;">Ações</th>
+                    <th style="padding: 12px 15px; font-size: 0.85rem;">CLIENTE</th>
+                    <th style="padding: 12px 15px; font-size: 0.85rem;">SERVIÇO</th>
+                    <th style="padding: 12px 15px; font-size: 0.85rem;">CONTATO / DATA</th>
+                    <th style="padding: 12px 15px; font-size: 0.85rem;">STATUS</th>
+                    <th style="padding: 12px 15px; font-size: 0.85rem; text-align: center;">AÇÕES</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in orçamentos %}
-                <tr style="border-bottom: 1px solid var(--border);">
-                    <td style="padding: 15px;">{{ item.nome }}</td>
-                    <td style="padding: 15px;">{{ item.get_servico_display }}</td>
-                    <td style="padding: 15px;">{{ item.data_envio|date:"d/m/Y H:i" }}</td>
-                    <td style="padding: 15px;">
-                        <span style="padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; background: #333;">
+                <tr style="border-bottom: 1px solid var(--border); transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                    <td style="padding: 12px 15px; font-weight: 600;">{{ item.nome }}</td>
+                    <td style="padding: 12px 15px;"><span class="badge bg-dark" style="font-size: 0.7rem;">{{ item.get_servico_display }}</span></td>
+                    <td style="padding: 12px 15px;">
+                        <div style="font-size: 0.8rem;">{{ item.email }}</div>
+                        <div style="font-size: 0.7rem; color: #666;">{{ item.data_envio|date:"d/m/Y H:i" }}</div>
+                    </td>
+                    <td style="padding: 12px 15px;">
+                        <span style="padding: 3px 8px; border-radius: 20px; font-size: 0.65rem; background: #222; border: 1px solid #444;">
                             {{ item.get_status_display }}
                         </span>
                     </td>
-                    <td style="padding: 15px; text-align: center; display: flex; gap: 10px; justify-content: center;">
-                        <a href="{% url 'gerar_pdf' item.pk %}" class="btn" style="background: #e74c3c; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.75rem; text-decoration: none; font-weight: bold;">
-                            PDF
-                        </a>
-                        <a href="/admin/website/orcamento/{{ item.id }}/change/" class="btn btn-outline" style="padding: 5px 12px; font-size: 0.75rem; text-decoration: none;">
-                            GERENCIAR
-                        </a>
+                    <td style="padding: 12px 15px; text-align: center;">
+                        <div style="display: flex; gap: 6px; justify-content: center;">
+                            <a href="{% url 'gerar_pdf' item.pk %}" class="btn" style="background: #ff4d4d; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; text-decoration: none; font-weight: bold;">
+                                PDF
+                            </a>
+                            <a href="/admin/website/orcamento/{{ item.id }}/change/" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.65rem; text-decoration: none;">
+                                EDITAR
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
                     <td colspan="5" style="padding: 30px; text-align: center;" class="text-muted">
-                        Nenhum orçamento recebido ainda.
+                        Nenhum orçamento encontrado.
                     </td>
                 </tr>
                 {% endfor %}
@@ -63,4 +78,37 @@
         </table>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('graficoServicos').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels_grafico|safe }},
+            datasets: [{
+                label: 'Pedidos',
+                data: {{ dados_grafico|safe }},
+                backgroundColor: '#00ff88',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Força o gráfico a respeitar a altura do container
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { 
+                    beginAtZero: true, 
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { font: { size: 10 } }
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { font: { size: 10 } }
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}
