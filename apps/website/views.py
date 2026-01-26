@@ -5,13 +5,22 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
-from django.template.loader import render_to_string # Adicionado para e-mail HTML
-from django.utils.html import strip_tags           # Adicionado para e-mail texto
-from .models import Orcamento
-from .forms import OrcamentoForm
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+# Importações dos modelos e do formulário (Onde o erro estava ocorrendo)
+from .models import Orcamento, ServicoPrestado 
+from .forms import OrcamentoForm # <-- ESTA LINHA É ESSENCIAL
 
 class IndexView(TemplateView):
     template_name = 'website/index.html'
+
+    def get_context_data(self, **kwargs):
+        """Passa a lista de serviços ativos para a página inicial"""
+        context = super().get_context_data(**kwargs)
+        # Busca serviços que você marcou como 'ativo' no Admin
+        context['servicos'] = ServicoPrestado.objects.filter(ativo=True)
+        return context
 
 class OrcamentoCreateView(CreateView):
     model = Orcamento
@@ -36,7 +45,7 @@ class OrcamentoCreateView(CreateView):
 
         # 4. Envio de Notificações
         try:
-            # E-mail para a Equipa DualCore (Notificação Interna)
+            # Notificação Interna para a DualCore
             assunto_equipa = f"Novo Orçamento Recebido: {servico}"
             corpo_equipa = f"Olá Equipa,\n\nO cliente {nome} solicitou um orçamento para {servico}.\nMensagem: {mensagem}"
             
@@ -47,18 +56,18 @@ class OrcamentoCreateView(CreateView):
                 [settings.DEFAULT_FROM_EMAIL]
             )
 
-            # E-mail com Design para o Cliente (Resposta Automática)
+            # Resposta Automática Profissional para o Cliente
             send_mail(
                 "Recebemos o seu pedido - DualCore Solutions",
                 text_content,
                 settings.DEFAULT_FROM_EMAIL,
                 [email_cliente],
-                html_message=html_content # Envia a versão bonita
+                html_message=html_content
             )
         except Exception as e:
             print(f"Erro ao enviar e-mails: {e}")
 
-        # 5. Renderiza a página de sucesso com os dados para o botão do WhatsApp
+        # 5. Contexto para a página de sucesso com botão WhatsApp
         context_sucesso = {
             'nome': nome,
             'servico': servico,
