@@ -29,7 +29,7 @@
                     <th style="padding: 15px;">Serviço</th>
                     <th style="padding: 15px;">Data</th>
                     <th style="padding: 15px;">Status</th>
-                    <th style="padding: 15px;">Ação</th>
+                    <th style="padding: 15px; text-align: center;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,8 +43,13 @@
                             {{ item.get_status_display }}
                         </span>
                     </td>
-                    <td style="padding: 15px;">
-                        <a href="/admin/website/orcamento/{{ item.id }}/change/" class="text-primary">Gerenciar</a>
+                    <td style="padding: 15px; text-align: center; display: flex; gap: 10px; justify-content: center;">
+                        <a href="{% url 'gerar_pdf' item.pk %}" class="btn" style="background: #e74c3c; color: white; padding: 5px 12px; border-radius: 4px; font-size: 0.75rem; text-decoration: none; font-weight: bold;">
+                            PDF
+                        </a>
+                        <a href="/admin/website/orcamento/{{ item.id }}/change/" class="btn btn-outline" style="padding: 5px 12px; font-size: 0.75rem; text-decoration: none;">
+                            GERENCIAR
+                        </a>
                     </td>
                 </tr>
                 {% empty %}

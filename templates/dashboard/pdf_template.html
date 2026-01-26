@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page { size: a4 portrait; margin: 2cm; }
+        body { font-family: sans-serif; color: #333; }
+        .header { text-align: center; border-bottom: 2px solid #00ff88; padding-bottom: 20px; }
+        .footer { position: fixed; bottom: 0; text-align: center; font-size: 10px; }
+        .content { margin-top: 30px; }
+        .label { font-weight: bold; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DualCore_Solutions</h1>
+        <p>Relatório de Solicitação de Orçamento</p>
+    </div>
+
+    <div class="content">
+        <p><span class="label">Cliente:</span> {{ orcamento.nome }}</p>
+        <p><span class="label">E-mail:</span> {{ orcamento.email }}</p>
+        <p><span class="label">Serviço:</span> {{ orcamento.get_servico_display }}</p>
+        <p><span class="label">Data do Pedido:</span> {{ orcamento.data_envio|date:"d/m/Y" }}</p>
+        <hr>
+        <h3>Mensagem do Cliente:</h3>
+        <p>{{ orcamento.mensagem }}</p>
+    </div>
+
+    <div class="footer">
+        DualCore Solutions | Automação e Infraestrutura | Rondônia, BR
+    </div>
+</body>
+</html>
