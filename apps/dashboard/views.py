@@ -1,29 +1,34 @@
 # apps/dashboard/views.py
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin # Importado para segurança
 from django.db.models import Count
 from xhtml2pdf import pisa
 from apps.website.models import Orcamento
 
-class DashboardIndexView(LoginRequiredMixin, TemplateView):
-    """View principal do Dashboard com contagem para os Gráficos"""
+class DashboardIndexView(UserPassesTestMixin, TemplateView):
     template_name = 'dashboard/index.html'
     
+    # Esta função define QUEM pode ver a página
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.is_superuser
+
+    # Se o usuário não tiver permissão, ele é mandado de volta para a Home
+    def handle_no_permission(self):
+        return redirect('home')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # 1. Dados para a tabela e os cards de resumo
+        # Dados para a tabela e os cards
         orçamentos = Orcamento.objects.all().order_by('-data_envio')
         context['orçamentos'] = orçamentos
         context['pendentes'] = Orcamento.objects.filter(status='pendente').count()
 
-        # 2. Lógica para os Gráficos (Agrupamento por tipo de serviço)
+        # Dados para os Gráficos
         stats = Orcamento.objects.values('servico').annotate(total=Count('servico'))
-        
-        # Mapeamento para transformar siglas (infra) em nomes bonitos (Infraestrutura de Redes)
         servicos_dict = dict(Orcamento.SERVICOS)
         
         labels = []
@@ -35,29 +40,25 @@ class DashboardIndexView(LoginRequiredMixin, TemplateView):
 
         context['labels_grafico'] = labels
         context['dados_grafico'] = dados
-        
         return context
 
 def gerar_pdf_orcamento(request, pk):
-    """Função que gera o arquivo PDF (O trabalho que havia sumido)"""
-    # 1. Busca o orçamento específico pelo ID (pk)
+    # Proteção extra para a função de PDF
+    if not request.user.is_staff:
+        return HttpResponse("Acesso negado", status=403)
+
     orcamento = get_object_or_404(Orcamento, pk=pk)
-    
-    # 2. Prepara o template do PDF
     template_path = 'dashboard/pdf_template.html'
     context = {'orcamento': orcamento}
     
-    # 3. Cria a resposta do navegador como um arquivo PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="Orcamento_{orcamento.nome}.pdf"'
     
-    # 4. Converte o HTML em PDF usando a biblioteca pisa
     template = get_template(template_path)
     html = template.render(context)
     pisa_status = pisa.CreatePDF(html, dest=response)
     
-    # 5. Se der erro na conversão, avisa o usuário
     if pisa_status.err:
-       return HttpResponse('Erro ao gerar o PDF do orçamento.', status=400)
+       return HttpResponse('Erro ao gerar o PDF', status=400)
        
     return response

@@ -1,4 +1,3 @@
-# apps/website/views.py
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, CreateView
 from django.urls import reverse_lazy
@@ -8,18 +7,23 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-# Importações dos modelos e do formulário (Onde o erro estava ocorrendo)
-from .models import Orcamento, ServicoPrestado 
-from .forms import OrcamentoForm # <-- ESTA LINHA É ESSENCIAL
+# Modelos e Forms
+from .models import Orcamento, ServicoPrestado, Projeto # Adicionado Projeto aqui
+from .forms import OrcamentoForm
 
 class IndexView(TemplateView):
     template_name = 'website/index.html'
 
     def get_context_data(self, **kwargs):
-        """Passa a lista de serviços ativos para a página inicial"""
+        """Passa serviços ativos e projetos do portfólio para a Home"""
         context = super().get_context_data(**kwargs)
-        # Busca serviços que você marcou como 'ativo' no Admin
+        
+        # 1. Busca serviços ativos
         context['servicos'] = ServicoPrestado.objects.filter(ativo=True)
+        
+        # 2. Busca os últimos 6 projetos cadastrados para o Portfólio
+        context['projetos'] = Projeto.objects.all()[:6]
+        
         return context
 
 class OrcamentoCreateView(CreateView):
@@ -38,25 +42,22 @@ class OrcamentoCreateView(CreateView):
         servico = self.object.get_servico_display()
         mensagem = form.cleaned_data['mensagem']
 
-        # 3. Prepara o conteúdo do e-mail HTML para o cliente
+        # 3. Conteúdo do e-mail HTML
         context_email = {'nome': nome, 'servico': servico}
         html_content = render_to_string('emails/confirmacao_orcamento.html', context_email)
         text_content = strip_tags(html_content)
 
         # 4. Envio de Notificações
         try:
-            # Notificação Interna para a DualCore
-            assunto_equipa = f"Novo Orçamento Recebido: {servico}"
-            corpo_equipa = f"Olá Equipa,\n\nO cliente {nome} solicitou um orçamento para {servico}.\nMensagem: {mensagem}"
-            
+            # Notificação para a DualCore
             send_mail(
-                assunto_equipa, 
-                corpo_equipa, 
+                f"Novo Orçamento: {servico}", 
+                f"Olá Equipa,\n\nO cliente {nome} solicitou orçamento para {servico}.\nMensagem: {mensagem}", 
                 settings.DEFAULT_FROM_EMAIL, 
                 [settings.DEFAULT_FROM_EMAIL]
             )
 
-            # Resposta Automática Profissional para o Cliente
+            # Resposta Automática para o Cliente
             send_mail(
                 "Recebemos o seu pedido - DualCore Solutions",
                 text_content,
@@ -67,7 +68,7 @@ class OrcamentoCreateView(CreateView):
         except Exception as e:
             print(f"Erro ao enviar e-mails: {e}")
 
-        # 5. Contexto para a página de sucesso com botão WhatsApp
+        # 5. Redireciona para página de sucesso personalizada
         context_sucesso = {
             'nome': nome,
             'servico': servico,
