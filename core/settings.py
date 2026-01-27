@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url  # Importante para o banco de dados de produção
 
 # Carrega as variáveis do arquivo .env
 load_dotenv()
@@ -8,9 +9,20 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- SEGURANÇA ---
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-i_+ak3&%jandkx^5$=rhuc2z%hbcc%3*c%rjqfnfd94klr&q4(')
-DEBUG = True
-ALLOWED_HOSTS = []
+# Em produção, a SECRET_KEY deve estar obrigatoriamente no .env
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-mude-isso-em-producao')
+
+# O DEBUG deve ser False em produção. No seu .env, coloque DEBUG=True para testar localmente.
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+# Domínios permitidos (Render, Railway e locais)
+ALLOWED_HOSTS = [
+    '127.0.0.1', 
+    'localhost', 
+    '.render.com', 
+    '.railway.app', 
+    'dualcoresolutions.tech' # Substitua pelo seu domínio futuro
+]
 
 # --- APPS ---
 INSTALLED_APPS = [
@@ -21,6 +33,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # App para gerir estáticos em produção
+    'whitenoise.runserver_nostatic', 
+    
     # Apps da DualCore Solutions
     'apps.website',
     'apps.accounts',
@@ -29,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # DEVE vir logo após o SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,11 +74,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # --- BANCO DE DADOS ---
+# Se houver uma variável DATABASE_URL (comum em servidores de produção), ele usa ela (PostgreSQL)
+# Caso contrário, usa o SQLite local para desenvolvimento.
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600
+    )
 }
 
 # --- VALIDAÇÃO DE SENHA ---
@@ -83,6 +101,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+# Pasta onde o Django reunirá todos os arquivos estáticos para o servidor
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Otimização do WhiteNoise para comprimir arquivos CSS/JS
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -90,8 +114,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # --- AUTENTICAÇÃO E REDIRECIONAMENTO ---
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
-# Redireciona para o Dashboard da DualCore após o login
 LOGIN_REDIRECT_URL = 'dashboard' 
 LOGOUT_REDIRECT_URL = 'login'
 
@@ -103,5 +125,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
-# Remetente padrão para comunicações da empresa
 DEFAULT_FROM_EMAIL = f"DualCore Solutions <{os.getenv('EMAIL_USER')}>"
