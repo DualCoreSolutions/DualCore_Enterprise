@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
@@ -7,6 +8,8 @@ import dj_database_url
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps')) 
+# Isso ensina o Django a olhar dentro da pasta /apps
 
 # 2. Segurança e Identidade
 SECRET_KEY = os.getenv('SECRET_KEY')
