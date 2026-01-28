@@ -76,12 +76,26 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # --- BANCO DE DADOS ---
 # Se houver uma variável DATABASE_URL (comum em servidores de produção), ele usa ela (PostgreSQL)
 # Caso contrário, usa o SQLite local para desenvolvimento.
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600
-    )
-}
+
+# No core/settings.py, por volta da linha 80
+
+db_url = os.getenv('DATABASE_URL')
+
+if db_url and db_url.startswith('postgres'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=db_url, 
+            conn_max_age=600
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 # --- VALIDAÇÃO DE SENHA ---
 AUTH_PASSWORD_VALIDATORS = [
