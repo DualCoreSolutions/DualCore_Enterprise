@@ -9,26 +9,25 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps')) 
-# Isso ensina o Django a olhar dentro da pasta /apps
 
 # 2. Segurança e Identidade
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['dualcore-enterprise.onrender.com', 'localhost', '127.0.0.1']
 
-# 3. Configurações Core (Onde está o erro)
+# 3. Configurações Core
 ROOT_URLCONF = 'core.urls'
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # 4. Definição de Aplicativos
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',  # WhiteNoise deve ser o primeiro da lista
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenoise.runserver_nostatic',
     
     # Apps DualCore
     'apps.website',
@@ -36,10 +35,10 @@ INSTALLED_APPS = [
     'apps.dashboard',
 ]
 
-# 5. Middlewares (WhiteNoise deve ser o segundo)
+# 5. Middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Sempre abaixo de SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,7 +64,7 @@ TEMPLATES = [
     },
 ]
 
-# 7. Banco de Dados (Configuração Dinâmica para Render)
+# 7. Banco de Dados
 db_url = os.getenv('DATABASE_URL')
 if db_url:
     DATABASES = {
@@ -79,11 +78,18 @@ else:
         }
     }
 
-# 8. Arquivos Estáticos e Mídia
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# 8. Arquivos Estáticos e Mídia (CORRIGIDO PARA RENDER)
+STATIC_URL = '/static/'
+
+# Pasta onde você coloca seus arquivos (como a imagem verde)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Pasta onde o Django reunirá tudo após o collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# Use este em vez do CompressedManifest...
+
+# Armazenamento otimizado para WhiteNoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/media/'
