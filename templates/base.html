@@ -6,6 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DualCore Solutions | Enterprise</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Força o tema escuro em todo o sistema DualCore */
+        :root {
+            --bg-dark: #0a0a0a;
+            --primary: #00ff88;
+            --border: #333;
+            --text-main: #e0e0e0;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .nav-links a {
+            color: #bbb;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Estilo para garantir que o bloco de conteúdo não tenha margens brancas */
+        .content { min-height: 80vh; }
+    </style>
 </head>
 <body>
 
@@ -17,20 +67,20 @@
             {% if user.is_authenticated %}
                 {% if user.is_staff %}
                     <a href="{% url 'pedir_orcamento' %}">Orçamentos</a>
-                    <a href="{% url 'dashboard' %}" class="btn btn-outline">Painel</a>
+                    <a href="{% url 'dashboard' %}" style="border: 1px solid var(--primary); padding: 5px 15px; border-radius: 5px; color: var(--primary);">Painel</a>
                 {% endif %}
 
                 {% if user.is_superuser %}
                     <a href="/admin/" style="color: var(--primary); font-weight: bold;">Gerenciar Sistema</a>
                 {% endif %}
                 
-                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                <form action="{% url 'logout' %}" method="post" style="display: inline; margin-left: 20px;">
                     {% csrf_token %}
-                    <button type="submit" class="btn" style="color: var(--danger); background: none; cursor: pointer;">Sair</button>
+                    <button type="submit" style="color: #ff4d4d; background: none; border: none; cursor: pointer; font-size: 0.9rem;">Sair</button>
                 </form>
             {% else %}
                 <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}" class="btn btn-primary">Começar</a>
+                <a href="{% url 'register' %}" style="background: var(--primary); color: #000; padding: 8px 20px; border-radius: 5px; font-weight: bold;">Começar</a>
             {% endif %}
         </div>
     </nav>
@@ -40,8 +90,8 @@
         {% endblock %}
     </div>
 
-    <footer style="text-align: center; padding: 40px; border-top: 1px solid var(--border); margin-top: 50px;">
-        <p class="text-muted">&copy; 2026 DualCore Solutions. Infraestrutura e Automação. 🟢</p>
+    <footer style="text-align: center; padding: 40px; border-top: 1px solid var(--border); margin-top: 50px; background: #000;">
+        <p style="color: #666; font-size: 0.8rem;">&copy; 2026 DualCore Solutions. Infraestrutura e Automação. 🟢</p>
     </footer>
 
 </body>
