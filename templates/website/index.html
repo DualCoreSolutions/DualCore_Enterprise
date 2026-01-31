@@ -2,11 +2,42 @@
 {% load static %}
 
 {% block content %}
+<style>
+    /* Efeito neon nos cards ao passar o mouse */
+    .card:hover {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 25px rgba(0, 255, 136, 0.2);
+        transform: translateY(-8px);
+        background: rgba(0, 255, 136, 0.02) !important;
+    }
+    
+    /* Brilho nos botões principais */
+    .btn-primary:hover {
+        box-shadow: 0 0 20px var(--primary);
+        filter: brightness(1.1);
+    }
+
+    /* Ajuste de transição suave global */
+    .card, .btn, img {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    }
+
+    /* Estilização do terminal no rodapé */
+    .terminal-box {
+        animation: pulse border 2s infinite;
+    }
+    @keyframes pulse-border {
+        0% { border-color: var(--border); }
+        50% { border-color: var(--primary); }
+        100% { border-color: var(--border); }
+    }
+</style>
+
 <div style="padding: 100px 5%; text-align: center; max-width: 1200px; margin: 0 auto;">
     
     <div style="margin-bottom: 80px;">
-        <h1 style="font-size: 4rem; margin-bottom: 20px; line-height: 1.1; font-weight: 850;">
-            TRANSFORMAMOS <span class="text-primary">CÓDIGO</span><br> EM RESULTADO.
+        <h1 style="font-size: 4rem; margin-bottom: 20px; line-height: 1.1; font-weight: 850; letter-spacing: -1px;">
+            TRANSFORMAMOS <span style="color: var(--primary); text-shadow: 0 0 15px rgba(0,255,136,0.3);">CÓDIGO</span><br> EM RESULTADO.
         </h1>
         
         <p class="text-muted" style="font-size: 1.25rem; max-width: 700px; margin: 0 auto 40px;">
@@ -14,10 +45,10 @@
         </p>
 
         <div style="display: flex; gap: 20px; justify-content: center;">
-            <a href="{% url 'pedir_orcamento' %}" class="btn btn-primary" style="padding: 15px 35px; font-size: 1rem;">
+            <a href="{% url 'pedir_orcamento' %}" class="btn btn-primary" style="padding: 15px 35px; font-size: 1rem; font-weight: bold; border-radius: 8px;">
                 COMEÇAR PROJETO
             </a>
-            <a href="#servicos" class="btn btn-outline" style="padding: 15px 35px; font-size: 1rem;">
+            <a href="#servicos" class="btn btn-outline" style="padding: 15px 35px; font-size: 1rem; border-radius: 8px;">
                 NOSSOS SERVIÇOS
             </a>
         </div>
@@ -25,65 +56,70 @@
 
     <div id="servicos" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; text-align: left; margin-bottom: 100px;">
         {% for servico in servicos %}
-        <div class="card" style="border: 1px solid var(--border); padding: 30px; border-radius: 12px; transition: 0.3s;">
-            <div style="color: var(--primary); font-size: 1.5rem; margin-bottom: 15px;">
+        <div class="card" style="border: 1px solid var(--border); padding: 30px; border-radius: 12px; background: rgba(255,255,255,0.01);">
+            <div style="color: var(--primary); font-size: 1.8rem; margin-bottom: 15px;">
                 <i class="bi {{ servico.icone }}"></i>
                 {% if not servico.icone %}⚡{% endif %} 
             </div>
-            <h3 style="margin: 0 0 10px 0;">{{ servico.titulo }}</h3>
+            <h3 style="margin: 0 0 10px 0; font-size: 1.3rem; color: #fff;">{{ servico.titulo }}</h3>
             <p class="text-muted" style="font-size: 0.95rem; line-height: 1.6;">{{ servico.descricao }}</p>
         </div>
         {% empty %}
-        <p class="text-center text-muted" style="grid-column: 1 / -1; padding: 40px; border: 1px dashed var(--border);">
+        <p class="text-center text-muted" style="grid-column: 1 / -1; padding: 50px; border: 1px dashed var(--border); border-radius: 12px;">
             Estamos atualizando nosso catálogo de serviços. Volte em breve!
         </p>
         {% endfor %}
     </div>
 
     <div id="portfolio" style="text-align: left; margin-bottom: 100px;">
-        <h2 style="font-size: 2.5rem; margin-bottom: 40px;">Projetos <span class="text-primary">Recentes</span></h2>
+        <h2 style="font-size: 2.5rem; margin-bottom: 40px; font-weight: 800;">Projetos <span style="color: var(--primary);">Recentes</span></h2>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
             {% for projeto in projetos %}
-            <div class="card" style="padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; transition: 0.3s; background: rgba(255,255,255,0.02);">
-                <div style="width: 100%; height: 220px; background: #222; overflow: hidden;">
+            <div class="card" style="padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; background: rgba(255,255,255,0.02);">
+                <div style="width: 100%; height: 220px; background: #111; overflow: hidden;">
                     {% if projeto.imagem %}
-                        <img src="{{ projeto.imagem.url }}" alt="{{ projeto.titulo }}" style="width: 100%; height: 100%; object-fit: cover; transition: 0.5s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                        <img src="{{ projeto.imagem.url }}" alt="{{ projeto.titulo }}" style="width: 100%; height: 100%; object-fit: cover;">
                     {% else %}
-                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #444;">
-                            <i class="bi bi-image" style="font-size: 3rem;"></i>
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #333; background: linear-gradient(45deg, #0a0a0a, #1a1a1a);">
+                            <i class="bi bi-code-slash" style="font-size: 3.5rem; opacity: 0.3;"></i>
                         </div>
                     {% endif %}
                 </div>
                 
                 <div style="padding: 25px;">
-                    <span style="font-size: 0.7rem; color: var(--primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">
+                    <span style="font-size: 0.7rem; color: var(--primary); font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px;">
                         {{ projeto.tecnologias }}
                     </span>
-                    <h3 style="margin: 10px 0; font-size: 1.4rem;">{{ projeto.titulo }}</h3>
+                    <h3 style="margin: 12px 0; font-size: 1.4rem; color: #fff;">{{ projeto.titulo }}</h3>
                     <p class="text-muted" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
                         {{ projeto.descricao|truncatewords:25 }}
                     </p>
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); pt: 15px; margin-top: 10px; padding-top: 15px;">
-                        <small class="text-muted"><i class="bi bi-calendar-check"></i> {{ projeto.data_conclusao|date:"M Y" }}</small>
-                        <span style="font-size: 0.75rem; color: var(--primary);">DualCore_Verified ✓</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 15px;">
+                        <small style="color: #666;"><i class="bi bi-calendar3"></i> {{ projeto.data_conclusao|date:"M Y" }}</small>
+                        <span style="font-size: 0.75rem; color: var(--primary); font-family: monospace; font-weight: bold;">[ DualCore_Verified ]</span>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; border: 1px dashed var(--border); border-radius: 12px;">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; border: 1px dashed var(--border); border-radius: 12px; background: rgba(0,255,136,0.02);">
                 <p class="text-muted">A preparar a galeria de projetos concluídos pela DualCore Solutions...</p>
             </div>
             {% endfor %}
         </div>
     </div>
 
-    <div style="padding: 20px; background: #000; border: 1px solid var(--border); border-radius: 8px; display: inline-block; font-family: 'Courier New', monospace; text-align: left; font-size: 0.85rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <div style="color: var(--primary); margin-bottom: 5px;">> DualCore_Enterprise status: ONLINE</div>
-        <div style="color: var(--text-white); opacity: 0.6;">> Local: Rondônia, BR</div>
-        <div style="color: var(--text-white); opacity: 0.6;">> Engine: Django 5.0 + Python 3.13</div>
-        <div style="color: var(--text-white); opacity: 0.6;">> Uptime: 99.9%</div>
+    <div class="terminal-box" style="padding: 25px; background: #000; border: 1px solid var(--border); border-radius: 12px; display: inline-block; font-family: 'Courier New', monospace; text-align: left; font-size: 0.85rem; box-shadow: 0 15px 40px rgba(0,0,0,0.6);">
+        <div style="color: var(--primary); margin-bottom: 8px; font-weight: bold;">> DualCore_Enterprise status: ONLINE</div>
+        <div style="color: #888;">> Local: Rondônia, BR</div>
+        <div style="color: #888;">> Engine: Django 5.0 + Python 3.13</div>
+        <div style="color: #888;">> Uptime: 99.999%</div>
+        <div style="margin-top: 10px; color: var(--primary); opacity: 0.8; animation: blink 1s infinite;">_</div>
     </div>
 
 </div>
+
+<style>
+    @keyframes blink { 50% { opacity: 0; } }
+</style>
 {% endblock %}
