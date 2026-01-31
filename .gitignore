@@ -1,16 +1,22 @@
-# jango
+# Django
 *.log
 *.pot
 *.pyc
 __pycache__/
 local_settings.py
 db.sqlite3
+
+# Se você for usar arquivos de mídia no Render (upload de fotos), 
+# mantenha o media/ aqui, mas lembre que eles somem no plano free a cada deploy.
 media/
 
-# Ambientes Virtuais (NUNCA suba isso)
+# Ambientes Virtuais
 venv/
 env/
 .env
 
 # VS Code
-.vscode/D
+.vscode/
+
+# NUNCA coloque 'static/' ou 'staticfiles/' aqui. 
+# Eles precisam estar livres para o Git e para o Render.
