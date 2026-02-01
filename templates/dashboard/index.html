@@ -4,23 +4,25 @@
 {% block content %}
 <div style="padding: 40px 5%; background-color: #0a0a0a; color: #e0e0e0; min-height: 100vh;">
     
-    <div style="background-image: linear-gradient(to bottom, rgba(0,255,136,0.1), #0a0a0a), url({% static 'img/dashboard_hero.png' %});
-                background-size: cover; 
-                background-position: center; 
-                height: 300px; 
-                border-radius: 20px; 
-                display: flex; 
-                flex-direction: column; 
-                align-items: center; 
-                justify-content: center; 
-                margin-bottom: 40px; 
-                border: 1px solid rgba(0,255,136,0.3); 
-                box-shadow: 0 0 30px rgba(0,255,136,0.15);">
-        <h1 style="font-size: 3rem; text-transform: uppercase; letter-spacing: 5px; color: #00ff88; text-shadow: 0 0 15px rgba(0,255,136,0.8); margin-bottom: 10px;">
-            DualCore <span style="color: #fff;">Solutions</span>
-        </h1>
-        <div style="background: rgba(0,0,0,0.6); padding: 5px 20px; border-radius: 50px; border: 1px solid #00ff88; color: #00ff88; font-family: monospace;">
-            SISTEMA OPERACIONAL ATIVO: Bem-vindo, {{ user.username }}
+    <div style="width: 100%; height: 300px; position: relative; overflow: hidden; border-radius: 20px; margin-bottom: 40px; border: 1px solid rgba(0,255,136,0.3); background-color: #0a0a0a; box-shadow: 0 0 30px rgba(0,255,136,0.15);">
+        
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                    background-image: url({% static 'img/dashboard_hero.png' %}); 
+                    background-size: cover; background-position: center; 
+                    opacity: 0.5; z-index: 1;"></div>
+
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                    background: linear-gradient(to bottom, rgba(0,255,136,0.1), #0a0a0a); 
+                    display: flex; flex-direction: column; align-items: center; 
+                    justify-content: center; z-index: 2;">
+            
+            <h1 style="font-size: 3rem; text-transform: uppercase; letter-spacing: 5px; color: #00ff88; text-shadow: 0 0 15px rgba(0,255,136,0.8); margin-bottom: 10px;">
+                DualCore <span style="color: #fff;">Solutions</span>
+            </h1>
+            
+            <div style="background: rgba(0,0,0,0.6); padding: 5px 20px; border-radius: 50px; border: 1px solid #00ff88; color: #00ff88; font-family: monospace;">
+                SISTEMA OPERACIONAL ATIVO: Bem-vindo, {{ user.username }}
+            </div>
         </div>
     </div>
 
@@ -75,17 +77,13 @@
                     </td>
                     <td style="padding: 15px; text-align: center;">
                         <div style="display: flex; gap: 8px; justify-content: center;">
-                            <a href="{% url 'gerar_pdf' item.pk %}" style="background: #ff4d4d; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.7rem; text-decoration: none; font-weight: bold; box-shadow: 0 0 10px rgba(255,77,77,0.3);">PDF</a>
-                            <a href="/admin/website/orcamento/{{ item.id }}/change/" style="border: 1px solid #00ff88; color: #00ff88; padding: 6px 12px; border-radius: 4px; font-size: 0.7rem; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='#00ff88'; this.style.color='#000';">EDITAR</a>
+                            <a href="{% url 'gerar_pdf' item.pk %}" style="background: #ff4d4d; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.7rem; text-decoration: none; font-weight: bold;">PDF</a>
+                            <a href="/admin/website/orcamento/{{ item.id }}/change/" style="border: 1px solid #00ff88; color: #00ff88; padding: 6px 12px; border-radius: 4px; font-size: 0.7rem; text-decoration: none;">EDITAR</a>
                         </div>
                     </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="5" style="padding: 40px; text-align: center; color: #666;">
-                        Nenhum orçamento encontrado no sistema.
-                    </td>
-                </tr>
+                <tr><td colspan="5" style="padding: 40px; text-align: center; color: #666;">Nenhum orçamento encontrado.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -103,28 +101,16 @@
                 label: 'Pedidos',
                 data: {{ dados_grafico|safe }},
                 backgroundColor: '#00ff88',
-                borderColor: '#00ff88',
-                borderWidth: 1,
-                borderRadius: 5,
-                hoverBackgroundColor: '#ffffff'
+                borderRadius: 5
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { 
-                legend: { display: false }
-            },
+            plugins: { legend: { display: false } },
             scales: {
-                y: { 
-                    beginAtZero: true, 
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    ticks: { color: '#888', font: { size: 10 } }
-                },
-                x: { 
-                    grid: { display: false },
-                    ticks: { color: '#888', font: { size: 10 } }
-                }
+                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } },
+                x: { grid: { display: false }, ticks: { color: '#888' } }
             }
         }
     });
